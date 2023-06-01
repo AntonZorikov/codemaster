@@ -9,11 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
-
-
 @Service
-public class UserService {
+public class AuthorizationService {
 
     @Autowired
     private UserRepository userRepository;
@@ -22,7 +19,6 @@ public class UserService {
         if (userRepository.findByName(userEntity.getName()) == null){
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
             userEntity.setPassword(encoder.encode(userEntity.getPassword()));
-            //boolean matches = encoder.matches("password", hashedPassword);
             return userRepository.save(userEntity);
         }
         else {
@@ -30,15 +26,13 @@ public class UserService {
         }
     }
 
-    public UserEntity signin(UserEntity userEntity) throws UserNotFound, IncorrectPassword {
-        UserEntity existingUser = userRepository.findByName(userEntity.getName());
+    public UserEntity signin(String login, String password) throws UserNotFound, IncorrectPassword {
+        UserEntity existingUser = userRepository.findByName(login);
         if (existingUser == null) {
             throw new UserNotFound("User not found");
         }
-        System.out.println(userEntity.getPassword());
-        System.out.println(existingUser.getPassword());
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        if (encoder.matches(userEntity.getPassword(), existingUser.getPassword())) {
+        if (encoder.matches(password, existingUser.getPassword())) {
             return existingUser;
         } else {
             throw new IncorrectPassword("Incorrect password");

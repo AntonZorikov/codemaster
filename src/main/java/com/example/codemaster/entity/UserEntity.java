@@ -1,7 +1,13 @@
 package com.example.codemaster.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.hibernate.annotations.ColumnDefault;
+import java.util.ArrayList;
+import java.util.List;
+import com.example.codemaster.entity.CourseEntity;
+
 
 @Entity
 @Table(name="users")
@@ -13,13 +19,18 @@ public class UserEntity {
     @Column(columnDefinition = "varchar(25)")
     private String name;
 
+    @JsonIgnore
     @Column(columnDefinition = "varchar(60)")
     private String password;
 
     @Column(columnDefinition = "varchar(10)")
     private String role;
 
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CourseEntity> courses;
+
     public UserEntity() {
+
     }
 
     public Long getId() {
@@ -52,5 +63,13 @@ public class UserEntity {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public List<CourseEntity> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<CourseEntity> courses) {
+        this.courses = courses;
     }
 }
