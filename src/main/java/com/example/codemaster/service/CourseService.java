@@ -31,12 +31,26 @@ public class CourseService {
 
     }
 
-//    public Optional<CourseEntity> getCours(Long id) throws CourseNotFound {
-//        if(coursRepository.findById(id) == null){
-//            throw new CourseNotFound("Cours not found");
-//        }
-//        else{
-//            return coursRepository.findById(id);
-//        }
-//    }
+    public CourseEntity getCourse(Long id) throws CourseNotFound {
+        if(coursRepository.findById(id) == null){
+            throw new CourseNotFound("Course not found");
+        }
+        else{
+            return coursRepository.findById(id).get();
+        }
+    }
+
+    public CourseEntity updateCourse(Long id, CourseEntity courseEntity) throws CourseNotFound{
+        Optional<CourseEntity> optionalCourse = coursRepository.findById(id);
+        if(optionalCourse.isPresent()){
+            CourseEntity course = optionalCourse.get();
+            course.setDescription(courseEntity.getDescription());
+            course.setTitle(courseEntity.getTitle());
+            course.setPrice(courseEntity.getPrice());
+            return coursRepository.save(course);
+        }
+        else{
+            throw new CourseNotFound("Course not found");
+        }
+    }
 }
