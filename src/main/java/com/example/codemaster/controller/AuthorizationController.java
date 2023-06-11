@@ -4,38 +4,42 @@ import com.example.codemaster.entity.UserEntity;
 import com.example.codemaster.exception.IncorrectPassword;
 import com.example.codemaster.exception.UserAlreadyExist;
 import com.example.codemaster.exception.UserNotFound;
+import com.example.codemaster.model.LogInInputs;
+import com.example.codemaster.model.SignInInputs;
 import com.example.codemaster.service.AuthorizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("/api/auth")
+@Controller
 public class AuthorizationController {
 
     @Autowired
     AuthorizationService authorizationService;
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody UserEntity user){
+    public String signin(@ModelAttribute LogInInputs logInInputs, Model model) {
         try{
-            authorizationService.login(user);
-            return ResponseEntity.ok("User login successful");
+            UserEntity user = authorizationService.login(new UserEntity(logInInputs.username, logInInputs.password));
+            model.addAttribute("loggedIn", true);
+            return "/login";
         }
         catch (UserAlreadyExist e){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+            model.addAttribute("error", true);
+            return "/login";        }
     }
-
-    @GetMapping("/signin")
-    public ResponseEntity signin(@RequestParam(name = "login") String login, @RequestParam(name = "password") String password){
+    @PostMapping("/signin")
+    public String signin(@ModelAttribute SignInInputs signinInputs, Model model) {
         try{
-            return ResponseEntity.ok(authorizationService.signin(login, password));
+            UserEntity user = authorizationService.signin(signinInputs.username, signinInputs.password);
+            model.addAttribute("loggedIn", true);
+            return "/signin";
         }
         catch (UserNotFound | IncorrectPassword e){
-            return ResponseEntity.badRequest().body(e.getMessage());
+            model.addAttribute("error", true);
+            return "/signin";
         }
     }
-
-
 }

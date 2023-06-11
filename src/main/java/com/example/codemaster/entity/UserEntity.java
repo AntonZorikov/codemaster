@@ -33,6 +33,12 @@ public class UserEntity {
 
     }
 
+    public UserEntity(String name, String password) {
+        this.name = name;
+        this.password = password;
+        this.role = "user";
+    }
+
     public Long getId() {
         return id;
     }
