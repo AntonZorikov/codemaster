@@ -9,6 +9,7 @@ import com.example.codemaster.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
@@ -46,10 +47,16 @@ public class CourseService {
             course.setDescription(courseEntity.getDescription());
             course.setTitle(courseEntity.getTitle());
             course.setPrice(courseEntity.getPrice());
+            course.setPublished(courseEntity.isPublished());
             return coursRepository.save(course);
         }
         else{
             throw new CourseNotFound("Course not found");
         }
+    }
+
+    public ArrayList<CourseEntity> getAllCoursesBuAuthorId(Long authorId){
+        ArrayList<CourseEntity> courses = coursRepository.findAllByAuthorId(authorId);
+        return courses;
     }
 }

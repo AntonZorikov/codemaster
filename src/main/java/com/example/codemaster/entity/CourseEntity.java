@@ -1,5 +1,6 @@
 package com.example.codemaster.entity;
 
+import com.example.codemaster.model.CrUpCourseInputs;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
@@ -23,7 +24,16 @@ public class CourseEntity {
 
     private Long price;
 
+    private boolean published;
+
     public CourseEntity() {
+    }
+
+    public CourseEntity(CrUpCourseInputs crUpCourseInputs) {
+        this.title = crUpCourseInputs.getTitle();
+        this.description = crUpCourseInputs.getDescription();
+        this.price = crUpCourseInputs.getPrice();
+        this.published = false;
     }
 
     public Long getId() {
@@ -64,5 +74,13 @@ public class CourseEntity {
 
     public void setAuthor(UserEntity author) {
         this.author = author;
+    }
+
+    public boolean isPublished() {
+        return published;
+    }
+
+    public void setPublished(boolean published) {
+        this.published = published;
     }
 }

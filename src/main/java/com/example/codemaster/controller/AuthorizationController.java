@@ -7,6 +7,8 @@ import com.example.codemaster.exception.UserNotFound;
 import com.example.codemaster.model.LogInInputs;
 import com.example.codemaster.model.SignInInputs;
 import com.example.codemaster.service.AuthorizationService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -31,9 +33,15 @@ public class AuthorizationController {
             return "/login";        }
     }
     @PostMapping("/signin")
-    public String signin(@ModelAttribute SignInInputs signinInputs, Model model) {
+    public String signin(@ModelAttribute SignInInputs signinInputs, Model model, HttpServletRequest request) {
         try{
             UserEntity user = authorizationService.signin(signinInputs.username, signinInputs.password);
+
+            HttpSession session = request.getSession();
+            session.setAttribute("userId", user.getId());
+            session.setAttribute("username", user.getName());
+            session.setAttribute("loggedIn", true);
+
             model.addAttribute("loggedIn", true);
             return "/signin";
         }

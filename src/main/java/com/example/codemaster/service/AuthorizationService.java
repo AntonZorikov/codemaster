@@ -15,6 +15,7 @@ public class AuthorizationService {
     @Autowired
     private UserRepository userRepository;
 
+
     public UserEntity login(UserEntity userEntity) throws UserAlreadyExist {
         if (userRepository.findByName(userEntity.getName()) == null){
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
