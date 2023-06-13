@@ -83,4 +83,10 @@ public class PageController {
             return "/edit_course";
         }
     }
+
+    @RequestMapping("/uploads")
+    public String uploads(){
+        return "uploads";
+    }
+
 }
