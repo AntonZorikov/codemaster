@@ -24,13 +24,10 @@ public class CourseController {
         try {
             HttpSession session = request.getSession();
             Long authorId = (Long) session.getAttribute("userId");
-
             if (authorId == null) {
                 throw new UserNotAuthorized("UserNotAuthorized");
             }
-
             model.addAttribute("courses", courseService.getAllCoursesBuAuthorId(authorId));
-
             return "/my_published_courses";
         } catch (UserNotAuthorized e) {
             model.addAttribute("error", true);
@@ -49,9 +46,7 @@ public class CourseController {
             if (userId == null) {
                 throw new UserNotAuthorized("UserNotAuthorized");
             }
-
             courseService.createCourse(new CourseEntity(crUpCourseInputs), userId);
-
             model.addAttribute("isAdded", true);
             return "/add_course";
         } catch (CourseAlreadyExists e) {

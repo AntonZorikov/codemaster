@@ -1,7 +1,10 @@
 package com.example.codemaster.controller;
 
+import com.example.codemaster.exception.UserNotAuthorized;
 import com.example.codemaster.model.CrUpCourseInputs;
 import com.example.codemaster.model.UploadForm;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,18 +28,25 @@ public class UploadController {
     }
 
     @PostMapping("/upload")
-    public String uploadFile(@RequestParam("file") MultipartFile file, @RequestParam Long courseId, Model model) {
+    public String uploadFile(@RequestParam("file") MultipartFile file, @RequestParam Long courseId, Model model,
+                             HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        Long userId = (Long) session.getAttribute("userId");
+
+        if (userId == null) {
+            model.addAttribute("error", true);
+            model.addAttribute("errorMessage", "User not authorized");
+            return "uploads";
+        }
+
         if (file.isEmpty()) {
             model.addAttribute("error", true);
             model.addAttribute("errorMessage", "not empty");
             return "uploads";
         }
         String originalFilename = file.getOriginalFilename();
-        System.out.println(originalFilename);
         String extension = originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
-        System.out.println(extension);
         originalFilename = courseId + "." + extension;
-        System.out.println(originalFilename);
         try {
             if(!originalFilename.substring(originalFilename.lastIndexOf(".") + 1).equals("rar")){
                 model.addAttribute("error", true);

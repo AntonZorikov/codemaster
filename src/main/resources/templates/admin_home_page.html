@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Spring Security Example </title>
+</head>
+<body>
+
+<p>Hello it is Admin starting page</p>
+<p><a href="accept_application">LogIn</a></p>
+
+<div th:if="${error}">
+    <p>Error: [[${errorMessage}]]</p>
+</div>
+
+</body>
+</html>

@@ -8,7 +8,11 @@ import com.example.codemaster.repository.CourseRepository;
 import com.example.codemaster.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -56,7 +60,10 @@ public class CourseService {
     }
 
     public ArrayList<CourseEntity> getAllCoursesBuAuthorId(Long authorId){
-        ArrayList<CourseEntity> courses = coursRepository.findAllByAuthorId(authorId);
-        return courses;
+        return coursRepository.findAllByAuthorId(authorId);
+    }
+
+    public ArrayList<CourseEntity> getAllByPublishedFalse(){
+        return coursRepository.findByPublishedFalse();
     }
 }

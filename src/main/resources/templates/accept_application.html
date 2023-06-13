@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Spring Security Example </title>
+</head>
+<body>
+
+<div th:if="${error}">
+    <p>Error: [[${errorMessage}]]</p>
+</div>
+
+
+<h2>Accept application page</h2>
+
+<table>
+    <tr>
+        <th>Id</th>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Price</th>
+    </tr>
+    <tr th:each="course : ${courses}">
+        <td th:text="${course.id}"></td>
+        <td th:text="${course.title}"></td>
+        <td th:text="${course.description}"></td>
+        <td th:text="${course.price}"></td>
+        <td>
+            <form th:action="@{accept_application}" method="post">
+                <input type="hidden" name="courseId" th:value="${course.id}" />
+                <button type="submit">Accept</button>
+            </form>
+        </td>
+    </tr>
+</table>
+
+
+</body>
+</html>
