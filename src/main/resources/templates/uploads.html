@@ -6,10 +6,17 @@
 <body>
 
 <form th:action="@{/upload}" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="courseId" th:value="${param.courseId}" />
     <input type="file" name="file" />
     <input type="submit" value="Upload" />
 </form>
 
+<div th:if="${successfully}">
+    Archive added successfully
+</div>
+<div th:if="${error}">
+    <p>Error: [[${errorMessage}]]</p>
+</div>
 
 </body>
 </html>

@@ -16,6 +16,7 @@
         <td th:text="${course.description}"></td>
         <td th:text="${course.price}"></td>
         <td><a th:href="@{/edit_course(courseId=${course.id})}">Edit</a></td>
+        <td><a th:href="@{/uploads(courseId=${course.id})}">Add File</a></td>
     </tr>
 </table>
 
