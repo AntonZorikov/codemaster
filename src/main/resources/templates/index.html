@@ -8,5 +8,21 @@
     <p>Hello it is starting page</p>
     <p><a href="login">LogIn</a></p>
     <p><a href="signin">SignIn</a></p>
+
+    <form th:action="@{/searchCourse}" method="post">
+        <div><label><input type="text" name="requestTitle"/></label></div>
+        <div><input type="submit" value="Search"/></div>
+    </form>
+
+    <div th:if="${search}">
+        <table>
+            <tr th:each="course : ${search_response}">
+                <td th:text="${course.title}"></td>
+                <td th:text="${course.description}"></td>
+                <td th:text="${course.price}"></td>
+            </tr>
+        </table>
+    </div>
+
 </body>
 </html>

@@ -5,6 +5,7 @@ import com.example.codemaster.exception.CourseAlreadyExists;
 import com.example.codemaster.exception.CourseNotFound;
 import com.example.codemaster.exception.UserNotAuthorized;
 import com.example.codemaster.model.CrUpCourseInputs;
+import com.example.codemaster.model.SearchCourseForm;
 import com.example.codemaster.service.AuthorizationService;
 import com.example.codemaster.service.CourseService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import java.util.ArrayList;
 
 @Controller
 public class CourseController {
@@ -103,4 +105,14 @@ public class CourseController {
             }
         }
     }
+    @PostMapping("/searchCourse")
+    public String searchCourse(@ModelAttribute SearchCourseForm searchCourseForm, Model model) throws UserNotAuthorized {
+        ArrayList<CourseEntity> searchResults = courseService.findByTitleContaining(searchCourseForm.getRequestTitle());
+        model.addAttribute("search", true);
+        model.addAttribute("search_response", searchResults);
+        System.out.println("Find: " + searchResults);
+
+        return "index";
+    }
+
 }
