@@ -4,6 +4,7 @@ import com.example.codemaster.entity.CourseEntity;
 import com.example.codemaster.exception.CourseNotFound;
 import com.example.codemaster.exception.NotEnoughRights;
 import com.example.codemaster.exception.UserNotAuthorized;
+import com.example.codemaster.service.AuthorizationService;
 import com.example.codemaster.service.CourseService;
 import com.example.codemaster.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,18 +25,17 @@ public class AdminController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private AuthorizationService authorizationService;
+
     @PostMapping("/accept_application")
     public String acceptApplication(@RequestParam Long courseId, HttpServletRequest request, Model model) throws NotEnoughRights {
         try {
-            HttpSession session = request.getSession();
-            Long userId = (Long) session.getAttribute("userId");
-
-            if (userId == null) {
+            boolean userIsAuthorize = authorizationService.userIsAuthorize(request);
+            if(!userIsAuthorize){
                 throw new UserNotAuthorized("UserNotAuthorized");
             }
-            if (!userService.getUserById(userId).getRole().equals("admin")) {
-                throw new NotEnoughRights("NotEnoughRights");
-            }
+
             CourseEntity courseEntity = courseService.getCourse(courseId);
             courseEntity.setPublished(true);
             courseService.updateCourse(courseId, courseEntity);
@@ -45,11 +45,6 @@ public class AdminController {
         catch (UserNotAuthorized e){
             model.addAttribute("error", true);
             model.addAttribute("errorMessage", "User not authorized");
-            return "accept_application";
-        }
-        catch (NotEnoughRights e){
-            model.addAttribute("error", true);
-            model.addAttribute("errorMessage", "Not enough rights");
             return "accept_application";
         }
         catch (CourseNotFound e) {

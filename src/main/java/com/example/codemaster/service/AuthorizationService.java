@@ -5,6 +5,8 @@ import com.example.codemaster.exception.IncorrectPassword;
 import com.example.codemaster.exception.UserAlreadyExist;
 import com.example.codemaster.exception.UserNotFound;
 import com.example.codemaster.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -40,5 +42,15 @@ public class AuthorizationService {
         }
     }
 
+    public boolean userIsAuthorize(HttpServletRequest request)
+    {
+        HttpSession session = request.getSession();
+        Long userId = (Long) session.getAttribute("userId");
+
+        if (userId == null) {
+            return false;
+        }
+        return true;
+    }
 
 }

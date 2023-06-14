@@ -2,6 +2,7 @@ package com.example.codemaster.controller;
 
 import com.example.codemaster.exception.CourseNotFound;
 import com.example.codemaster.exception.UserNotAuthorized;
+import com.example.codemaster.service.AuthorizationService;
 import com.example.codemaster.service.CourseService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -15,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class PageController {
     @Autowired
     private CourseService courseService;
+
+    @Autowired
+    private AuthorizationService authorizationService;
 
     @RequestMapping("/")
     public String hello(){
@@ -41,9 +45,12 @@ public class PageController {
         try{
             HttpSession session = request.getSession();
             Long authorId = (Long) session.getAttribute("userId");
-            if(authorId == null){
+
+            boolean userIsAuthorize = authorizationService.userIsAuthorize(request);
+            if(!userIsAuthorize){
                 throw new UserNotAuthorized("UserNotAuthorized");
             }
+
             model.addAttribute("courses", courseService.getAllCoursesBuAuthorId(authorId));
             return "/my_published_courses";
         }
@@ -59,9 +66,11 @@ public class PageController {
         try{
             HttpSession session = request.getSession();
             Long authorId = (Long) session.getAttribute("userId");
-            if(authorId == null){
+            boolean userIsAuthorize = authorizationService.userIsAuthorize(request);
+            if(!userIsAuthorize){
                 throw new UserNotAuthorized("UserNotAuthorized");
             }
+
             if(courseService.getAllCoursesBuAuthorId(authorId).contains(courseService.getCourse(courseId))){
                 model.addAttribute("courseId", courseId);
                 model.addAttribute("description", courseService.getCourse(courseId).getDescription());

@@ -5,6 +5,7 @@ import com.example.codemaster.exception.CourseAlreadyExists;
 import com.example.codemaster.exception.CourseNotFound;
 import com.example.codemaster.exception.UserNotAuthorized;
 import com.example.codemaster.model.CrUpCourseInputs;
+import com.example.codemaster.service.AuthorizationService;
 import com.example.codemaster.service.CourseService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -19,14 +20,20 @@ public class CourseController {
     @Autowired
     private CourseService courseService;
 
+    @Autowired
+    private AuthorizationService authorizationService;
+
     @GetMapping("/getPublishedCourse")
     public String getPublishedCourse(Model model, HttpServletRequest request) throws UserNotAuthorized {
         try {
             HttpSession session = request.getSession();
             Long authorId = (Long) session.getAttribute("userId");
-            if (authorId == null) {
+
+            boolean userIsAuthorize = authorizationService.userIsAuthorize(request);
+            if(!userIsAuthorize){
                 throw new UserNotAuthorized("UserNotAuthorized");
             }
+
             model.addAttribute("courses", courseService.getAllCoursesBuAuthorId(authorId));
             return "/my_published_courses";
         } catch (UserNotAuthorized e) {
