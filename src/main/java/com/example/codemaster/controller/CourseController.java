@@ -125,8 +125,6 @@ public class CourseController {
         HttpSession session = request.getSession();
         Long userId = (Long) session.getAttribute("userId");
 
-        System.out.println(courseId + " " + commentary + " " +  grade + " " +  userId);
-
         boolean userIsAuthorize = authorizationService.userIsAuthorize(request);
         if(!userIsAuthorize){
             model.addAttribute("error", true);

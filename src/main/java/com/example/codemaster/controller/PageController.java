@@ -1,5 +1,6 @@
 package com.example.codemaster.controller;
 
+import com.example.codemaster.entity.RatingEntity;
 import com.example.codemaster.exception.CourseNotFound;
 import com.example.codemaster.exception.UserNotAuthorized;
 import com.example.codemaster.service.AuthorizationService;
@@ -11,6 +12,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import java.text.DecimalFormat;
+
+import java.util.ArrayList;
 
 @Controller
 public class PageController {
@@ -102,9 +106,22 @@ public class PageController {
             Long userId = (Long) session.getAttribute("userId");
             boolean userIsAuthorize = authorizationService.userIsAuthorize(request);
             if (courseService.getCourse(courseId).isPublished()) {
+
+                ArrayList<RatingEntity> allRating = courseService.getAllRatingByCourseId(courseId);
+                Long sum = allRating.stream().mapToLong(RatingEntity::getGrade).sum();
+                float avg = allRating.isEmpty() ? 0 : (float) sum / allRating.size();
+                float roundedAvg = Math.round(avg * 10) / 10.0f;
+
+
+                System.out.println(roundedAvg);
+
                 model.addAttribute("course", courseService.getCourse(courseId));
                 model.addAttribute("courseId", courseId);
                 model.addAttribute("authorize", true);
+                if(avg > 0) {
+                    model.addAttribute("rating", true);
+                    model.addAttribute("avgRating", roundedAvg);
+                }
                 return "/course";
             } else {
                 model.addAttribute("error", true);

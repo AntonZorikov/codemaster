@@ -6,10 +6,19 @@
 <body>
 
     <h1>[[${course.title}]]</h1>
-    <p>[[${course.author.name}]]</p>
-    <p>[[${course.description}]]</p>
 
-    <p>C: [[${courseId}]]</p>
+    <div th:if="${rating}">
+        <p>Rating: [[${avgRating}]]</p>
+    </div>
+
+    <p>Price: [[${course.price}]]<p>
+
+
+    <p>Author: [[${course.author.name}]]</p>
+    <p>Description: [[${course.description}]]</p>
+
+
+
 
     <div th:if="${authorize}">
         <form th:action="@{/rateCourse}" method="post">

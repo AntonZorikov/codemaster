@@ -81,4 +81,8 @@ public class CourseService {
             return ratingRepository.save(ratingEntity);
         }
     }
+
+    public ArrayList<RatingEntity> getAllRatingByCourseId(Long courseId){
+        return ratingRepository.findAllByCourseId(courseId);
+    }
 }
