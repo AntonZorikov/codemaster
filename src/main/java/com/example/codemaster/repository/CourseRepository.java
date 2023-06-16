@@ -12,7 +12,4 @@ public interface CourseRepository extends CrudRepository<CourseEntity, Long> {
     ArrayList<CourseEntity> findAllByAuthorId(Long authorId);
     ArrayList<CourseEntity> findByPublishedFalse();
     ArrayList<CourseEntity> findByTitleContaining(String keyword);
-
-
-
 }

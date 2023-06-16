@@ -21,40 +21,39 @@ public class PageController {
     private AuthorizationService authorizationService;
 
     @RequestMapping("/")
-    public String hello(){
+    public String hello() {
         return "index";
     }
 
     @RequestMapping("/login")
-    public String login(){
+    public String login() {
         return "login";
     }
 
     @RequestMapping("/signin")
-    public String signin(){
+    public String signin() {
         return "signin";
     }
 
     @RequestMapping("/addcourse")
-    public String addCourse(){
+    public String addCourse() {
         return "add_course";
     }
 
     @RequestMapping("/my_published_courses")
     public String myPublishedCourse(Model model, HttpServletRequest request) throws UserNotAuthorized {
-        try{
+        try {
             HttpSession session = request.getSession();
             Long authorId = (Long) session.getAttribute("userId");
 
             boolean userIsAuthorize = authorizationService.userIsAuthorize(request);
-            if(!userIsAuthorize){
+            if (!userIsAuthorize) {
                 throw new UserNotAuthorized("UserNotAuthorized");
             }
 
             model.addAttribute("courses", courseService.getAllCoursesBuAuthorId(authorId));
             return "/my_published_courses";
-        }
-        catch (UserNotAuthorized e){
+        } catch (UserNotAuthorized e) {
             model.addAttribute("error", true);
             model.addAttribute("errorMessage", "User not authorized");
             return "/my_published_courses";
@@ -62,27 +61,25 @@ public class PageController {
     }
 
     @RequestMapping("edit_course")
-    public String editCourse(@RequestParam Long courseId, Model model, HttpServletRequest request) throws UserNotAuthorized{
-        try{
+    public String editCourse(@RequestParam Long courseId, Model model, HttpServletRequest request) throws UserNotAuthorized {
+        try {
             HttpSession session = request.getSession();
             Long authorId = (Long) session.getAttribute("userId");
             boolean userIsAuthorize = authorizationService.userIsAuthorize(request);
-            if(!userIsAuthorize){
+            if (!userIsAuthorize) {
                 throw new UserNotAuthorized("UserNotAuthorized");
             }
 
-            if(courseService.getAllCoursesBuAuthorId(authorId).contains(courseService.getCourse(courseId))){
+            if (courseService.getAllCoursesBuAuthorId(authorId).contains(courseService.getCourse(courseId))) {
                 model.addAttribute("courseId", courseId);
                 model.addAttribute("description", courseService.getCourse(courseId).getDescription());
                 return "/edit_course";
-            }
-            else {
+            } else {
                 model.addAttribute("error", true);
                 model.addAttribute("errorMessage", "Course not found");
                 return "/edit_course";
             }
-        }
-        catch (UserNotAuthorized e){
+        } catch (UserNotAuthorized e) {
             model.addAttribute("error", true);
             model.addAttribute("errorMessage", "User not authorized");
             return "/edit_course";
@@ -94,8 +91,30 @@ public class PageController {
     }
 
     @RequestMapping("/uploads")
-    public String uploads(){
+    public String uploads() {
         return "uploads";
     }
 
+    @RequestMapping("/course")
+    public String course(@RequestParam Long courseId, Model model, HttpServletRequest request) {
+        try {
+            HttpSession session = request.getSession();
+            Long userId = (Long) session.getAttribute("userId");
+            boolean userIsAuthorize = authorizationService.userIsAuthorize(request);
+            if (courseService.getCourse(courseId).isPublished()) {
+                model.addAttribute("course", courseService.getCourse(courseId));
+                model.addAttribute("courseId", courseId);
+                model.addAttribute("authorize", true);
+                return "/course";
+            } else {
+                model.addAttribute("error", true);
+                model.addAttribute("errorMessage", "Course not found");
+                return "/course";
+            }
+        } catch (CourseNotFound e) {
+            model.addAttribute("error", true);
+            model.addAttribute("errorMessage", "Course not found");
+            return "/course";
+        }
+    }
 }

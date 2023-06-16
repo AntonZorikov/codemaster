@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Spring Security Example </title>
+</head>
+<body>
+
+    <h1>[[${course.title}]]</h1>
+    <p>[[${course.author.name}]]</p>
+    <p>[[${course.description}]]</p>
+
+    <p>C: [[${courseId}]]</p>
+
+    <div th:if="${authorize}">
+        <form th:action="@{/rateCourse}" method="post">
+            <input type="hidden" name="courseId" th:value="${courseId}" />
+            <div>
+                <label>Rate the course:</label><br>
+                <select id="rating" name="grade">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </div>
+                <label>Rate the course:</label><br>
+                <div><label><input type="text" name="commentary"/></label></div>
+            <div>
+                <input type="submit" value="Submit">
+            </div>
+        </form>
+    </div>
+
+    <div th:if="${error}">
+        <p>Error: [[${errorMessage}]]</p>
+    </div>
+
+</body>
+</html>

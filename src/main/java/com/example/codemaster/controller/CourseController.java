@@ -1,10 +1,13 @@
 package com.example.codemaster.controller;
 
 import com.example.codemaster.entity.CourseEntity;
+import com.example.codemaster.entity.RatingEntity;
+import com.example.codemaster.exception.CommentaryAlreadyExist;
 import com.example.codemaster.exception.CourseAlreadyExists;
 import com.example.codemaster.exception.CourseNotFound;
 import com.example.codemaster.exception.UserNotAuthorized;
 import com.example.codemaster.model.CrUpCourseInputs;
+import com.example.codemaster.model.RatingForm;
 import com.example.codemaster.model.SearchCourseForm;
 import com.example.codemaster.service.AuthorizationService;
 import com.example.codemaster.service.CourseService;
@@ -113,6 +116,26 @@ public class CourseController {
         System.out.println("Find: " + searchResults);
 
         return "index";
+    }
+
+    @PostMapping("/rateCourse")
+    public String rateCourse(@RequestParam("courseId") Long courseId, @RequestParam("grade") Long grade,
+                             @RequestParam("commentary") String commentary, Model model, HttpServletRequest request)
+            throws UserNotAuthorized, CommentaryAlreadyExist {
+        HttpSession session = request.getSession();
+        Long userId = (Long) session.getAttribute("userId");
+
+        System.out.println(courseId + " " + commentary + " " +  grade + " " +  userId);
+
+        boolean userIsAuthorize = authorizationService.userIsAuthorize(request);
+        if(!userIsAuthorize){
+            model.addAttribute("error", true);
+            model.addAttribute("errorMessage", "User not authorize");
+            return "redirect:/course?courseId=" + courseId;
+        }
+        RatingEntity ratingEntity = courseService.createRating(new RatingEntity(courseId, commentary, grade, userId));
+
+        return "redirect:/course?courseId=" + courseId;
     }
 
 }
