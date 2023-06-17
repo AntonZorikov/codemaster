@@ -27,6 +27,13 @@
     </div>
 
     <div th:if="${isBuy}">
+
+        <form th:action="@{/downloadArchive}" method="post">
+            <input type="hidden" name="fileName" th:attr="value=${courseId}" />
+            <button type="submit">Download</button>
+        </form>
+
+
         <div th:if="${authorize}">
             <form th:action="@{/rateCourse}" method="post">
                 <input type="hidden" name="courseId" th:value="${courseId}" />

@@ -132,9 +132,6 @@ public class PageController {
                     model.addAttribute("notBuy", true);
                 }
 
-                System.out.println(userService.findCourseInCart(userId, courseId));
-                System.out.println(userId + " " + courseId);
-
                 model.addAttribute("commentary", courseService.getAllByCourseIdWhereCommentaryNotNull(courseId));
                 return "/course";
             } else {
