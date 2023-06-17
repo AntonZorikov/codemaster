@@ -1,10 +1,12 @@
 package com.example.codemaster.controller;
 
 import com.example.codemaster.entity.RatingEntity;
+import com.example.codemaster.exception.CourseAlreadyPurchased;
 import com.example.codemaster.exception.CourseNotFound;
 import com.example.codemaster.exception.UserNotAuthorized;
 import com.example.codemaster.service.AuthorizationService;
 import com.example.codemaster.service.CourseService;
+import com.example.codemaster.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,9 @@ public class PageController {
 
     @Autowired
     private AuthorizationService authorizationService;
+
+    @Autowired
+    private UserService userService;
 
     @RequestMapping("/")
     public String hello() {
@@ -106,22 +111,31 @@ public class PageController {
             Long userId = (Long) session.getAttribute("userId");
             boolean userIsAuthorize = authorizationService.userIsAuthorize(request);
             if (courseService.getCourse(courseId).isPublished()) {
-
                 ArrayList<RatingEntity> allRating = courseService.getAllRatingByCourseId(courseId);
                 Long sum = allRating.stream().mapToLong(RatingEntity::getGrade).sum();
                 float avg = allRating.isEmpty() ? 0 : (float) sum / allRating.size();
                 float roundedAvg = Math.round(avg * 10) / 10.0f;
 
-
-                System.out.println(roundedAvg);
-
                 model.addAttribute("course", courseService.getCourse(courseId));
                 model.addAttribute("courseId", courseId);
-                model.addAttribute("authorize", true);
+                model.addAttribute("authorize",     true);
                 if(avg > 0) {
                     model.addAttribute("rating", true);
                     model.addAttribute("avgRating", roundedAvg);
                 }
+
+                if(userIsAuthorize && userService.findCourseInCart(userId, courseId)){
+                    model.addAttribute("isBuy", true);
+                }
+
+                if(userIsAuthorize && !userService.findCourseInCart(userId, courseId)){
+                    model.addAttribute("notBuy", true);
+                }
+
+                System.out.println(userService.findCourseInCart(userId, courseId));
+                System.out.println(userId + " " + courseId);
+
+                model.addAttribute("commentary", courseService.getAllByCourseIdWhereCommentaryNotNull(courseId));
                 return "/course";
             } else {
                 model.addAttribute("error", true);
@@ -132,6 +146,8 @@ public class PageController {
             model.addAttribute("error", true);
             model.addAttribute("errorMessage", "Course not found");
             return "/course";
+        } catch (CourseAlreadyPurchased e) {
+            throw new RuntimeException(e);
         }
     }
 }

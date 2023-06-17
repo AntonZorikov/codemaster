@@ -47,10 +47,7 @@ public class AuthorizationService {
         HttpSession session = request.getSession();
         Long userId = (Long) session.getAttribute("userId");
 
-        if (userId == null) {
-            return false;
-        }
-        return true;
+        return userId != null;
     }
 
 }

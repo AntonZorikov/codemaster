@@ -6,6 +6,7 @@ import com.example.codemaster.entity.UserEntity;
 import com.example.codemaster.exception.CommentaryAlreadyExist;
 import com.example.codemaster.exception.CourseAlreadyExists;
 import com.example.codemaster.exception.CourseNotFound;
+import com.example.codemaster.repository.CartRepository;
 import com.example.codemaster.repository.CourseRepository;
 import com.example.codemaster.repository.RatingRepository;
 import com.example.codemaster.repository.UserRepository;
@@ -26,13 +27,16 @@ public class CourseService {
     @Autowired
     private RatingRepository ratingRepository;
 
-    public CourseEntity createCourse(CourseEntity coursEntity, Long authorId) throws CourseAlreadyExists {
+    @Autowired
+    private CartRepository cartRepository;
+
+    public CourseEntity createCourse(CourseEntity courseEntity, Long authorId) throws CourseAlreadyExists {
         UserEntity user = userRepository.findById(authorId).get();
-        coursEntity.setAuthor(user);
-        if (courseRepository.existsByTitle(coursEntity.getTitle())) {
+        courseEntity.setAuthor(user);
+        if (courseRepository.existsByTitle(courseEntity.getTitle())) {
             throw new CourseAlreadyExists("Course already exists");
         } else {
-            return courseRepository.save(coursEntity);
+            return courseRepository.save(courseEntity);
         }
     }
 
@@ -72,8 +76,6 @@ public class CourseService {
     }
 
     public RatingEntity createRating(RatingEntity ratingEntity) throws CommentaryAlreadyExist {
-        System.out.println("save");
-
         RatingEntity foundRatingEntity = ratingRepository.findByCourseIdAndUserId(ratingEntity.getCourseId(), ratingEntity.getUserId());
         if (foundRatingEntity != null) {
             throw new CommentaryAlreadyExist("Commentary already exists");
@@ -84,5 +86,9 @@ public class CourseService {
 
     public ArrayList<RatingEntity> getAllRatingByCourseId(Long courseId){
         return ratingRepository.findAllByCourseId(courseId);
+    }
+
+    public ArrayList<RatingEntity> getAllByCourseIdWhereCommentaryNotNull(Long courseId){
+        return ratingRepository.findAllByCourseIdWhereCommentaryNotNull(courseId);
     }
 }

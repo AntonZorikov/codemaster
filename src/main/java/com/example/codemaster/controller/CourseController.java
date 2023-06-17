@@ -1,16 +1,15 @@
 package com.example.codemaster.controller;
 
+import com.example.codemaster.entity.CartEntity;
 import com.example.codemaster.entity.CourseEntity;
 import com.example.codemaster.entity.RatingEntity;
-import com.example.codemaster.exception.CommentaryAlreadyExist;
-import com.example.codemaster.exception.CourseAlreadyExists;
-import com.example.codemaster.exception.CourseNotFound;
-import com.example.codemaster.exception.UserNotAuthorized;
+import com.example.codemaster.exception.*;
 import com.example.codemaster.model.CrUpCourseInputs;
 import com.example.codemaster.model.RatingForm;
 import com.example.codemaster.model.SearchCourseForm;
 import com.example.codemaster.service.AuthorizationService;
 import com.example.codemaster.service.CourseService;
+import com.example.codemaster.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +26,9 @@ public class CourseController {
 
     @Autowired
     private AuthorizationService authorizationService;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/getPublishedCourse")
     public String getPublishedCourse(Model model, HttpServletRequest request) throws UserNotAuthorized {
@@ -135,5 +137,20 @@ public class CourseController {
 
         return "redirect:/course?courseId=" + courseId;
     }
+    @PostMapping("/buyCourse")
+    public String buyCourse(@RequestParam("courseId") Long courseId, Model model, HttpServletRequest request) throws CourseAlreadyPurchased {
+        HttpSession session = request.getSession();
+        Long userId = (Long) session.getAttribute("userId");
 
+        boolean userIsAuthorize = authorizationService.userIsAuthorize(request);
+        if(!userIsAuthorize){
+            model.addAttribute("error", true);
+            model.addAttribute("errorMessage", "User not authorize");
+            return "redirect:/course?courseId=" + courseId;
+        }
+
+        userService.addToTheCart(new CartEntity(courseId, userId));
+
+        return "redirect:/course?courseId=" + courseId;
+    }
 }
