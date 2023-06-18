@@ -15,6 +15,13 @@
 
 
     <p>Author: [[${course.author.name}]]</p>
+
+    <video width="640" height="480" controls>
+        <source th:src="@{'uploads/introduction/' + ${courseId} + '.mp4'}" type="video/mp4">
+        Ваш браузер не поддерживает воспроизведение видео.
+    </video>
+
+
     <p>Description: [[${course.description}]]</p>
 
     <div th:if="${notBuy}">

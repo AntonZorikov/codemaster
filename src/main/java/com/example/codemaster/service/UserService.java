@@ -8,6 +8,8 @@ import com.example.codemaster.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
 @Service
 public class UserService {
     @Autowired
@@ -30,5 +32,9 @@ public class UserService {
 
     public boolean findCourseInCart(Long userId, Long courseId) throws CourseAlreadyPurchased {
         return cartRepository.findByCourseIdAndUserId(courseId, userId) != null;
+    }
+
+    public ArrayList<CartEntity> findAllCourseInCartByUserId(Long userId){
+        return cartRepository.findAllByUserId(userId);
     }
 }

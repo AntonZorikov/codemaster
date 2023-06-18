@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Spring Security Example </title>
+</head>
+<body>
+
+<tr th:each="course : ${courses}">
+    <td><img th:src="@{'uploads/banner/' + ${course.id} + '.png'}" alt="img" style="max-width: 100px; max-height: 100px;"></td>
+    <td th:text="${course.title}"></td>
+    <td><a th:href="@{/course(courseId=${course.id})}">open</a></td>
+</tr>
+
+<div th:if="${error}">
+    <p>Error: [[${errorMessage}]]</p>
+</div>
+
+</body>
+</html>

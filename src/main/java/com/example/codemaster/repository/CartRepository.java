@@ -10,5 +10,7 @@ import java.util.ArrayList;
 public interface CartRepository extends CrudRepository<CartEntity, Long> {
     CartEntity findByCourseIdAndUserId(Long courseId, Long userId);
 
+    ArrayList<CartEntity> findAllByUserId(Long userId);
+
 }
 

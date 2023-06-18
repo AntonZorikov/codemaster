@@ -1,5 +1,7 @@
 package com.example.codemaster.controller;
 
+import com.example.codemaster.entity.CartEntity;
+import com.example.codemaster.entity.CourseEntity;
 import com.example.codemaster.entity.RatingEntity;
 import com.example.codemaster.exception.CourseAlreadyPurchased;
 import com.example.codemaster.exception.CourseNotFound;
@@ -145,6 +147,33 @@ public class PageController {
             return "/course";
         } catch (CourseAlreadyPurchased e) {
             throw new RuntimeException(e);
+        }
+    }
+    @RequestMapping("/cart")
+    public String cart(Model model, HttpServletRequest request) {
+        try {
+            HttpSession session = request.getSession();
+            Long userId = (Long) session.getAttribute("userId");
+            boolean userIsAuthorize = authorizationService.userIsAuthorize(request);
+            if (!userIsAuthorize) {
+                throw new UserNotAuthorized("UserNotAuthorized");
+            }
+            ArrayList<CartEntity> coursesInCart = userService.findAllCourseInCartByUserId(userId);
+            ArrayList<CourseEntity> courses = new ArrayList<>();
+            for(int i = 0; i < coursesInCart.size();i++){
+                courses.add(courseService.getCourse(coursesInCart.get(i).getCourseId()));
+            }
+            model.addAttribute("courses", courses);
+            return "/cart";
+        }
+        catch (UserNotAuthorized e){
+            model.addAttribute("error", true);
+            model.addAttribute("errorMessage", "User not authorized");
+            return "/cart";
+        } catch (CourseNotFound e) {
+            model.addAttribute("error", true);
+            model.addAttribute("errorMessage", "Error");
+            return "/cart";
         }
     }
 }
