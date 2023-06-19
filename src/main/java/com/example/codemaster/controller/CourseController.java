@@ -110,13 +110,12 @@ public class CourseController {
             }
         }
     }
-    @PostMapping("/searchCourse")
+    @PostMapping("/")
     public String searchCourse(@ModelAttribute SearchCourseForm searchCourseForm, Model model) throws UserNotAuthorized {
         ArrayList<CourseEntity> searchResults = courseService.findByTitleContaining(searchCourseForm.getRequestTitle());
         model.addAttribute("search", true);
         model.addAttribute("search_response", searchResults);
-        System.out.println("Find: " + searchResults);
-
+        model.addAttribute("topRatedCourses", courseService.findTopRatedCourses());
         return "index";
     }
 

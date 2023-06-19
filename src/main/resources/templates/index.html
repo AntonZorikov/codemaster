@@ -3,26 +3,51 @@
 <head>
     <title>CodeMaster</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 <body>
-    <p>Hello it is starting page</p>
-    <p><a href="login">LogIn</a></p>
-    <p><a href="signin">SignIn</a></p>
-
-    <form th:action="@{/searchCourse}" method="post">
+    <header>
+        <h1>CodeMaster</h1>
+        <nav>
+            <a href="home">Home</a>
+            <a href="signin">SignIn</a>
+            <a href="login">Login</a>
+            <a href="cart">Cart</a>
+        </nav>
+    </header>
+    <form th:action="@{/}" method="post" class="search-form">
         <div><label><input type="text" name="requestTitle"/></label></div>
         <div><input type="submit" value="Search"/></div>
     </form>
 
-    <div th:if="${search}">
+<!--    <p><a href="login">LogIn</a></p>-->
+<!--    <p><a href="signin">SignIn</a></p>-->
+
+
+    <div th:if="${search}" class="table-container">
         <table>
             <tr th:each="course : ${search_response}">
+                <td><img th:src="@{'uploads/banner/' + ${course.id} + '.png'}" alt="img"></td>
                 <td th:text="${course.title}"></td>
-                <td th:text="${course.description}"></td>
-                <td th:text="${course.price}"></td>
+                <td th:text="${#strings.length(course.description) > 200 ? #strings.substring(course.description, 0, 200) + '...' : course.description}"></td>
+                <td th:text="${course.price} + '$'"></td>
+                <td><a th:href="@{/course(courseId=${course.id})}">open</a></td>
             </tr>
         </table>
     </div>
+
+    <h1>Most Rated Courses</h1>
+
+    <table>
+        <tr th:each="course : ${topRatedCourses}">
+            <td><img th:src="@{'uploads/banner/' + ${course.id} + '.png'}" alt="img"></td>
+            <td th:text="${course.title}"></td>
+            <td th:text="${#strings.length(course.description) > 200 ? #strings.substring(course.description, 0, 200) + '...' : course.description}"></td>
+            <td th:text="${course.price} + '$'"></td>
+            <td><a th:href="@{/course(courseId=${course.id})}">open</a></td>
+        </tr>
+    </table>
+
 
 </body>
 </html>

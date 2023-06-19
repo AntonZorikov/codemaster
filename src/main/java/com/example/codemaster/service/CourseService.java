@@ -91,4 +91,8 @@ public class CourseService {
     public ArrayList<RatingEntity> getAllByCourseIdWhereCommentaryNotNull(Long courseId){
         return ratingRepository.findAllByCourseIdWhereCommentaryNotNull(courseId);
     }
+
+    public  ArrayList<CourseEntity> findTopRatedCourses(){
+        return courseRepository.findTopRatedCourses();
+    }
 }

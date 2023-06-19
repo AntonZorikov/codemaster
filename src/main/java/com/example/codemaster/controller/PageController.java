@@ -16,7 +16,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import java.text.DecimalFormat;
 
 import java.util.ArrayList;
 
@@ -32,8 +31,16 @@ public class PageController {
     private UserService userService;
 
     @RequestMapping("/")
-    public String hello() {
-        return "index";
+    public String home(Model model) {
+        try {
+            model.addAttribute("topRatedCourses", courseService.findTopRatedCourses());
+            return "index";
+        }
+        catch (Exception e){
+            model.addAttribute("error", true);
+            model.addAttribute("errorMessage", "Error");
+            return "index";
+        }
     }
 
     @RequestMapping("/login")
