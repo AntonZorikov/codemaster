@@ -2,9 +2,169 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Spring Security Example </title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/course.css}" />
 </head>
-<body>
+<style>
+    h1 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 10px;
+}
 
+h2 {
+  font-size: 20px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+div[th:if="${rating}"] {
+  margin-bottom: 10px;
+}
+
+p {
+  margin-bottom: 5px;
+}
+
+video {
+  margin-bottom: 10px;
+}
+
+form {
+  margin-bottom: 10px;
+}
+
+input[type="submit"],
+button[type="submit"] {
+  padding: 8px 16px;
+  background-color: #3FA089;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+input[type="submit"]:hover,
+button[type="submit"]:hover {
+  background-color: #368471;
+}
+
+select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  width: 100px;
+}
+
+td {
+  padding: 5px;
+  border-bottom: 1px solid #ccc;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+.error {
+  color: red;
+  font-weight: bold;
+}
+
+.commentary {
+  margin-bottom: 10px;
+}
+
+.commentary p {
+  font-weight: bold;
+}
+
+.commentary td {
+  vertical-align: top;
+}
+
+.commentary br {
+  display: none;
+}
+
+.form-container {
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  max-width: 500px;
+}
+
+.form-container label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-container input[type="text"],
+.form-container select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.form-container input[type="submit"] {
+  padding: 8px 16px;
+  background-color: #3FA089;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.form-container input[type="submit"]:hover {
+  background-color: #368471;
+}
+
+.commentary-container {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.inf {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cour{
+    margin: 30px;
+}
+
+.description-container {
+  border: 1px solid #ccc;
+  padding: 10px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+
+</style>
+<body>
+<div th:insert="header :: header"></div>
+
+<div class="cour">
     <h1>[[${course.title}]]</h1>
 
     <div th:if="${rating}">
@@ -21,8 +181,16 @@
         Ваш браузер не поддерживает воспроизведение видео.
     </video>
 
+    <h2>Description</h2>
 
-    <p>Description: [[${course.description}]]</p>
+    <div class="description-container">
+        <p>Description: [[${course.description}]]</p>
+    </div>
+
+
+    <div th:if="${error}" class="inf" style="color: red;">
+        <p>Error: [[${errorMessage}]]</p>
+    </div>
 
     <div th:if="${notBuy}">
         <form th:action="@{/buyCourse}" method="post">
@@ -40,12 +208,11 @@
             <button type="submit">Download</button>
         </form>
 
-
-        <div th:if="${authorize}">
+        <div th:if="${authorize}" class="form-container">
             <form th:action="@{/rateCourse}" method="post">
                 <input type="hidden" name="courseId" th:value="${courseId}" />
                 <div>
-                    <label>Rate the course:</label><br>
+                    <label for="rating">Rate the course:</label><br>
                     <select id="rating" name="grade">
                         <option value="1">1</option>
                         <option value="2">2</option>
@@ -54,26 +221,26 @@
                         <option value="5">5</option>
                     </select>
                 </div>
-                    <label>Rate the course:</label><br>
-                    <div><label><input type="text" name="commentary"/></label></div>
+                <div>
+                    <label for="commentary">Comment:</label><br>
+                    <input type="text" id="commentary" name="commentary" />
+                </div>
                 <div>
                     <input type="submit" value="Submit">
                 </div>
             </form>
         </div>
+
     </div>
 
-
-    <div th:if="${error}">
-        <p>Error: [[${errorMessage}]]</p>
-    </div>
+    <h2>Commentary</h2>
 
     <tr th:each="commentary : ${commentary}">
-
-        <p>Grade: <td th:text="${commentary.grade}"></td></p>
-        <td th:text="${commentary.commentary}"></td>
-        <br>
+        <div class="commentary-container">
+            <p>Grade: <span th:text="${commentary.grade}"></span></p>
+            <span th:text="${commentary.commentary}"></span>
+        </div>
     </tr>
-
+</div>
 </body>
 </html>

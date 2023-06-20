@@ -123,18 +123,25 @@ public class CourseController {
     public String rateCourse(@RequestParam("courseId") Long courseId, @RequestParam("grade") Long grade,
                              @RequestParam("commentary") String commentary, Model model, HttpServletRequest request)
             throws UserNotAuthorized, CommentaryAlreadyExist {
-        HttpSession session = request.getSession();
-        Long userId = (Long) session.getAttribute("userId");
+        try {
+            HttpSession session = request.getSession();
+            Long userId = (Long) session.getAttribute("userId");
 
-        boolean userIsAuthorize = authorizationService.userIsAuthorize(request);
-        if(!userIsAuthorize){
+            boolean userIsAuthorize = authorizationService.userIsAuthorize(request);
+            if (!userIsAuthorize) {
+                model.addAttribute("error", true);
+                model.addAttribute("errorMessage", "User not authorize");
+                return "redirect:/course?courseId=" + courseId;
+            }
+            RatingEntity ratingEntity = courseService.createRating(new RatingEntity(courseId, commentary, grade, userId));
+
+            return "redirect:/course?courseId=" + courseId;
+        }
+        catch (CommentaryAlreadyExist e){
             model.addAttribute("error", true);
             model.addAttribute("errorMessage", "User not authorize");
             return "redirect:/course?courseId=" + courseId;
         }
-        RatingEntity ratingEntity = courseService.createRating(new RatingEntity(courseId, commentary, grade, userId));
-
-        return "redirect:/course?courseId=" + courseId;
     }
     @PostMapping("/buyCourse")
     public String buyCourse(@RequestParam("courseId") Long courseId, Model model, HttpServletRequest request) throws CourseAlreadyPurchased {

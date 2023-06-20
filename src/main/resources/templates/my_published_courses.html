@@ -2,28 +2,33 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Page Title</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/my_published_course.css.css}" />
 </head>
 <body>
+<div th:insert="header :: header"></div>
 
-<table>
-    <tr>
-        <th>Title</th>
-        <th>Description</th>
-        <th>Price</th>
-    </tr>
-    <tr th:each="course : ${courses}">
-        <td th:text="${course.title}"></td>
-        <td th:text="${course.description}"></td>
-        <td th:text="${course.price}"></td>
-        <td><a th:href="@{/edit_course(courseId=${course.id})}">Edit</a></td>
-        <td><a th:href="@{/uploads(courseId=${course.id})}">Add File</a></td>
-    </tr>
-</table>
+<div class="table-container">
+    <table>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Price</th>
+        </tr>
+        <tr th:each="course : ${courses}">
+            <td th:text="${course.title}"></td>
+            <td th:text="${#strings.length(course.description) > 200 ? #strings.substring(course.description, 0, 200) + '...' : course.description}"></td>
+            <td th:text="${course.price}"></td>
+            <td><a th:href="@{/edit_course(courseId=${course.id})}">Edit</a></td>
+            <td><a th:href="@{/uploads(courseId=${course.id})}">Add File</a></td>
+        </tr>
+    </table>
+</div>
 
-<div th:if="${isAdded}">
+<div th:if="${isAdded}" class="inf" style="color: green;">
     Course added successfully
 </div>
-<div th:if="${error}">
+<div th:if="${error}" class="inf" style="color: red;">
     <p>Error: [[${errorMessage}]]</p>
 </div>
 

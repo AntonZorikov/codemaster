@@ -2,18 +2,22 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Spring Security Example </title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/auth.css}" />
 </head>
 <body>
-<form th:action="@{/login}" method="post">
-    <div><label> User Name : <input type="text" name="username"/> </label></div>
-    <div><label> Password: <input type="password" name="password"/> </label></div>
-    <div><input type="submit" value="Log In"/></div>
-</form>
-<div th:if="${loggedIn}">
-    Success
-</div>
-<div th:if="${error}">
-    User Already Exist
-</div>
+    <div th:insert="header :: header"></div>
+
+    <form th:action="@{/login}" method="post">
+        <div><label> User Name : <input type="text" name="username"/> </label></div>
+        <div><label> Password: <input type="password" name="password"/> </label></div>
+        <div><input type="submit" value="Log In"/></div>
+    </form>
+    <div th:if="${loggedIn}"class="inf" style="color: #3FA089;">
+        Success
+    </div>
+    <div th:if="${error}" class="inf" style="color: red;">
+        User Already Exist
+    </div>
 </body>
 </html>

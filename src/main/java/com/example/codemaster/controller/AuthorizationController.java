@@ -26,7 +26,7 @@ public class AuthorizationController {
         try{
             UserEntity user = authorizationService.login(new UserEntity(logInInputs.username, logInInputs.password));
             model.addAttribute("loggedIn", true);
-            return "/login";
+            return "/signin";
         }
         catch (UserAlreadyExist e){
             model.addAttribute("error", true);
