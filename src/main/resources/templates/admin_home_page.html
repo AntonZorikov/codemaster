@@ -2,13 +2,35 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Spring Security Example </title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/admin_home.css}" />
 </head>
+<header class="admin-header">
+    <h1>CodeMaster</h1>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/signin">SignIn</a>
+        <a href="/login">Login</a>
+        <a href="/cart">Cart</a>
+    </nav>
+</header>
+
+<style>
+.admin-header {
+    background-color: #E35151;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+</style>
 <body>
+<div class="container">
+    <p>Hello, it is Admin starting page</p>
+    <p><a href="accept_application">Accept application</a></p>
+</div>
 
-<p>Hello it is Admin starting page</p>
-<p><a href="accept_application">Accept application</a></p>
-
-<div th:if="${error}">
+<div th:if="${error}" class="inf" style="color: red;">>
     <p>Error: [[${errorMessage}]]</p>
 </div>
 

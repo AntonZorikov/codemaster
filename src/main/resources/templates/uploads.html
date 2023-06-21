@@ -3,31 +3,47 @@
 <head>
     <title>Page Title</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/uploads.css}" />
 </head>
 <body>
 
-<form th:action="@{/uploadArchive}" method="post" enctype="multipart/form-data">
-    <input type="hidden" name="courseId" th:value="${param.courseId}" />
-    <input type="file" name="file" />
-    <input type="submit" value="Upload" />
-</form>
+<div th:insert="header :: header"></div>
 
-<form th:action="@{/uploadIntroduction}" method="post" enctype="multipart/form-data">
-    <input type="hidden" name="courseId" th:value="${param.courseId}" />
-    <input type="file" name="file" />
-    <input type="submit" value="Upload" />
-</form>
+<h2>Archive (.rar)</h2>
 
-<form th:action="@{/uploadBanner}" method="post" enctype="multipart/form-data">
-    <input type="hidden" name="courseId" th:value="${param.courseId}" />
-    <input type="file" name="file" />
-    <input type="submit" value="Upload" />
-</form>
+<div class="form-container">
+    <form th:action="@{/uploadArchive}" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="courseId" th:value="${param.courseId}" />
+        <input type="file" name="file" />
+        <input type="submit" value="Upload" />
+    </form>
+</div>
 
-<div th:if="${successfully}">
+<h2>Introduction (.mp4)</h2>
+
+<div class="form-container">
+    <form th:action="@{/uploadIntroduction}" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="courseId" th:value="${param.courseId}" />
+        <input type="file" name="file" />
+        <input type="submit" value="Upload" />
+    </form>
+</div>
+
+<h2>Banner (.png 720x400)</h2>
+
+<div class="form-container">
+    <form th:action="@{/uploadBanner}" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="courseId" th:value="${param.courseId}" />
+        <input type="file" name="file" />
+        <input type="submit" value="Upload" />
+    </form>
+</div>
+
+
+<div th:if="${successfully}" class="inf" style="color: green;">
     Data added successfully
 </div>
-<div th:if="${error}">
+<div th:if="${error}" class="inf" style="color: red;">
     <p>Error: [[${errorMessage}]]</p>
 </div>
 

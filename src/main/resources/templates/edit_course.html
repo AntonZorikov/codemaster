@@ -2,26 +2,27 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Page Title</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/edit_course.css}" />
 </head>
 <body>
+<div th:insert="header :: header"></div>
 
-<table>
-    <form th:action="@{/updateCourse}" method="post">
-        <input type="hidden" name="courseId" th:value="${courseId}" />
-        <h2>Title</h2>
-        <div><label><input type="text" name="title"/></label></div>
-        <h2>Description</h2>
-        <textarea name="description" rows="10" cols="25" th:text="${description}"></textarea>
-        <h2>Price</h2>
-        <div><label><input type="number" name="price"/></label></div>
-        <div><input type="submit" value="Save changes"/></div>
-    </form>
-</table>
+<form th:action="@{/updateCourse}" method="post">
+    <input type="hidden" name="courseId" th:value="${courseId}" />
+    <h2>Title</h2>
+    <div><label><input type="text" name="title"/></label></div>
+    <h2>Description</h2>
+    <textarea name="description" rows="10" cols="25" th:text="${description}"></textarea>
+    <h2>Price</h2>
+    <div><label><input type="number" name="price"/></label></div>
+    <div><input type="submit" value="Save changes"/></div>
+</form>
 
-<div th:if="${isAdded}">
+<div th:if="${isAdded}" class="inf" style="color: green">
     Course save successfully
 </div>
-<div th:if="${error}">
+<div th:if="${error}" class="inf" style="color: red">
     <p>Error: [[${errorMessage}]]</p>
 </div>
 

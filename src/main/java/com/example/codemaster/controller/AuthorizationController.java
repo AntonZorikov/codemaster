@@ -22,15 +22,16 @@ public class AuthorizationController {
     AuthorizationService authorizationService;
 
     @PostMapping("/login")
-    public String signin(@ModelAttribute LogInInputs logInInputs, Model model) {
+    public String login(@ModelAttribute LogInInputs logInInputs, Model model) {
         try{
             UserEntity user = authorizationService.login(new UserEntity(logInInputs.username, logInInputs.password));
             model.addAttribute("loggedIn", true);
-            return "/signin";
+            return "/login";
         }
-        catch (UserAlreadyExist e){
+        catch (UserAlreadyExist e) {
             model.addAttribute("error", true);
-            return "/login";        }
+            return "/login";
+        }
     }
     @PostMapping("/signin")
     public String signin(@ModelAttribute SignInInputs signinInputs, Model model, HttpServletRequest request) {

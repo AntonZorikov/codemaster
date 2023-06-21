@@ -157,7 +157,7 @@ public class UploadController {
             int width = image.getWidth();
             int height = image.getHeight();
 
-            if (width > 720 || height > 400) {
+            if (width != 720 || height != 400) {
                 model.addAttribute("error", true);
                 model.addAttribute("errorMessage", "Image dimensions exceed the maximum limit");
                 return "uploads";
