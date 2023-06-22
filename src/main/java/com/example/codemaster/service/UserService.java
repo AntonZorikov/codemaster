@@ -18,6 +18,12 @@ public class UserService {
     @Autowired
     private CartRepository cartRepository;
 
+    public UserService(UserRepository userRepository, CartRepository cartRepository) {
+        this.userRepository = userRepository;
+        this.cartRepository = cartRepository;
+    }
+
+
     public UserEntity getUserById(Long userId){
         return userRepository.findById(userId).get();
     }

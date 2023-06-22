@@ -17,6 +17,10 @@ public class AuthorizationService {
     @Autowired
     private UserRepository userRepository;
 
+    public AuthorizationService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
 
     public UserEntity login(UserEntity userEntity) throws UserAlreadyExist {
         if (userRepository.findByName(userEntity.getName()) == null){
