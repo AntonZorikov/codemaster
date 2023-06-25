@@ -9,8 +9,7 @@
 <div th:insert="header :: header"></div>
 
 <form th:action="@{/updateCourse}" method="post">
-    <input type="hidden" name="courseId" th:value="${courseId}" />
-    <h2>Title</h2>
+        <h2>Title</h2>
     <div><label><input type="text" name="title"/></label></div>
     <h2>Description</h2>
     <textarea name="description" rows="10" cols="25" th:text="${description}"></textarea>
